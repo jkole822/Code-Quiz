@@ -1,3 +1,17 @@
+/* Settings to Implement Sticky Footer (used with flex-shrink: 0 on #footer) */
+
+html,
+body {
+	height: 100%;
+}
+body {
+	display: flex;
+	flex-direction: column;
+}
+#content {
+	flex: 1 0 auto;
+}
+
 /* Footer */
 
 #footer {
@@ -5,6 +19,7 @@
 	color: rgb(243, 243, 243);
 	padding: 3vh 0;
 	text-align: center;
+	flex-shrink: 0;
 }
 
 #signature {

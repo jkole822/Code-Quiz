@@ -263,10 +263,10 @@ const codeSeven = `
 `;
 
 const questionSevenChoices = {
-	a: "e.target.preventDefault()",
-	b: "e.preventDefault()",
-	c: "e.stopPropagation()",
-	d: "e.target.stopPropagation()",
+	a: "e.stopPropagation()",
+	b: "e.target.stopPropagation()",
+	c: "e.target.preventDefault()",
+	d: "e.preventDefault()",
 };
 
 // Question 8
@@ -296,9 +296,11 @@ const startButton = document.getElementById("start-button");
 const optionButtons = document.getElementById("multi-choice-buttons");
 const resultButton = document.getElementById("result-button");
 const returnButton = document.getElementById("return-button");
+const clearButton = document.getElementById("clear");
 const correctMsg = document.getElementById("correct");
 const incorrectMsg = document.getElementById("incorrect");
 const highscoreList = document.getElementById("highscore-list");
+const highscoreLink = document.getElementById("highscore-link");
 
 const questionObject = {
 	0: {
@@ -341,7 +343,7 @@ const questionObject = {
 		question: questionSeven,
 		code: codeSeven,
 		choices: questionSevenChoices,
-		answer: "b",
+		answer: "d",
 	},
 	7: {
 		question: questionEight,
@@ -410,6 +412,14 @@ const sortScores = highscores => {
 	});
 };
 
+// Redirect directly to highscore section
+highscoreLink.addEventListener("click", () => {
+	startSection.style.display = "none";
+	questionSection.style.display = "none";
+	resultSection.style.display = "none";
+	highscoreSection.style.display = "block";
+});
+
 // Starts the quiz
 startButton.addEventListener("click", () => {
 	startSection.style.display = "none";
@@ -420,6 +430,10 @@ startButton.addEventListener("click", () => {
 
 optionButtons.addEventListener("click", event => {
 	if (event.target.matches("button")) {
+		for (let i = 0; i < optionButtons.children.length; i++) {
+			optionButtons.children[i].disabled = true;
+		}
+
 		// Display whether or not the user was correct in their answer
 		handleResponse(event);
 
@@ -438,8 +452,11 @@ optionButtons.addEventListener("click", event => {
 				// the next question
 			} else {
 				currentQuestion++;
-
 				renderQuestion();
+			}
+
+			for (let i = 0; i < optionButtons.children.length; i++) {
+				optionButtons.children[i].disabled = false;
 			}
 		}, 1000);
 	}
@@ -490,6 +507,12 @@ returnButton.addEventListener("click", () => {
 	// Return to the start of the quiz
 	highscoreSection.style.display = "none";
 	startSection.style.display = "block";
+});
+
+clearButton.addEventListener("click", () => {
+	// Clear highscores list on screen and in local storage
+	localStorage.setItem("highscores", "");
+	highscoreList.innerHTML = "";
 });
 
 init();
