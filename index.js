@@ -461,7 +461,7 @@ const countdownSeconds = () => {
 		} else {
 			displaySeconds.textContent = seconds;
 		}
-	}, 50);
+	}, 1000);
 };
 
 // Countdown minutes
