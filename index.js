@@ -298,6 +298,7 @@ const resultButton = document.getElementById("result-button");
 const returnButton = document.getElementById("return-button");
 const correctMsg = document.getElementById("correct");
 const incorrectMsg = document.getElementById("incorrect");
+const highscoreList = document.getElementById("highscore-list");
 
 const questionObject = {
 	0: {
@@ -402,6 +403,13 @@ const calculateResult = () => {
 	score.textContent = `${result}%`;
 };
 
+// Sorts highscores from local storage
+const sortScores = highscores => {
+	return Object.keys(highscores).sort((a, b) => {
+		return highscores[b] - highscores[a];
+	});
+};
+
 // Starts the quiz
 startButton.addEventListener("click", () => {
 	startSection.style.display = "none";
@@ -439,24 +447,36 @@ optionButtons.addEventListener("click", event => {
 
 resultButton.addEventListener("click", event => {
 	event.preventDefault();
+	var highscoreStore;
 
 	// If there is no current local storage for results, create one
 	if (!localStorage.getItem("highscores")) {
-		const newHighscoreStore = {};
+		highscoreStore = {};
 
-		newHighscoreStore[initials.value] = result;
+		highscoreStore[initials.value] = result;
 
-		localStorage.setItem("highscores", JSON.stringify(newHighscoreStore));
+		localStorage.setItem("highscores", JSON.stringify(highscoreStore));
 
 		// Otherwise, retrieve the local storage object and add the result with
 		// corresponding user initials
 	} else {
-		const highscoreStore = JSON.parse(localStorage.getItem("highscores"));
+		highscoreStore = JSON.parse(localStorage.getItem("highscores"));
 
 		highscoreStore[initials.value] = result;
 
 		localStorage.setItem("highscores", JSON.stringify(highscoreStore));
 	}
+
+	// Update highscores list by resetting the previous list, sorting the scores,
+	// then appending the sorted scores to the highscore list as new list items
+	highscoreList.innerHTML = "";
+	const sortedInitals = sortScores(highscoreStore);
+	console.log(sortedInitals);
+	sortedInitals.forEach(initial => {
+		const listItem = document.createElement("li");
+		listItem.innerHTML = `${initial}: ${highscoreStore[initial]}`;
+		highscoreList.appendChild(listItem);
+	});
 
 	// Continue to the highscore section
 	resultSection.style.display = "none";
