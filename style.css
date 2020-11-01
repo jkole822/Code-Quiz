@@ -1,3 +1,13 @@
+/* Main Content */
+#content {
+	margin: 5vh 0;
+}
+
+/* Timer */
+#timer {
+	color: #ffffff;
+}
+
 /* Settings to Implement Sticky Footer (used with flex-shrink: 0 on #footer) */
 
 html,
@@ -34,4 +44,11 @@ body {
 
 #my-github {
 	margin-bottom: 0;
+}
+
+/* Medium Screen Sizes and Up */
+@media only screen and (min-width: 768px) {
+	.btn {
+		width: 15%;
+	}
 }

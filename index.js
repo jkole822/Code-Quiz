@@ -428,6 +428,45 @@ const sortScores = highscores => {
 	});
 };
 
+const renderHighscores = () => {
+	var highscoreStore;
+
+	// If there is no current local storage for results, create one
+	if (!localStorage.getItem("highscores") && initials.value) {
+		highscoreStore = {};
+
+		highscoreStore[initials.value] = result;
+
+		localStorage.setItem("highscores", JSON.stringify(highscoreStore));
+
+		// Otherwise, retrieve the local storage object and add the result with
+		// corresponding user initials
+	} else {
+		highscoreStore = JSON.parse(localStorage.getItem("highscores"));
+
+		if (initials.value) {
+			highscoreStore[initials.value] = result;
+		}
+
+		localStorage.setItem("highscores", JSON.stringify(highscoreStore));
+	}
+
+	// Update highscores list by resetting the previous list, sorting the scores,
+	// then appending the sorted scores to the highscore list as new list items
+	highscoreList.innerHTML = "";
+	const sortedInitals = sortScores(highscoreStore);
+
+	sortedInitals.forEach(initial => {
+		const listItem = document.createElement("li");
+		listItem.innerHTML = `${initial}: ${highscoreStore[initial]}`;
+		highscoreList.appendChild(listItem);
+	});
+
+	// Continue to the highscore section
+	resultSection.style.display = "none";
+	highscoreSection.style.display = "block";
+};
+
 // Setup Timer
 const setupTimer = () => {
 	timer.style.display = "block";
@@ -501,8 +540,7 @@ const deductTime = () => {
 highscoreLink.addEventListener("click", () => {
 	startSection.style.display = "none";
 	questionSection.style.display = "none";
-	resultSection.style.display = "none";
-	highscoreSection.style.display = "block";
+	renderHighscores();
 
 	clearInterval(interval);
 	timer.style.display = "none";
@@ -553,40 +591,7 @@ optionButtons.addEventListener("click", event => {
 
 resultButton.addEventListener("click", event => {
 	event.preventDefault();
-	var highscoreStore;
-
-	// If there is no current local storage for results, create one
-	if (!localStorage.getItem("highscores")) {
-		highscoreStore = {};
-
-		highscoreStore[initials.value] = result;
-
-		localStorage.setItem("highscores", JSON.stringify(highscoreStore));
-
-		// Otherwise, retrieve the local storage object and add the result with
-		// corresponding user initials
-	} else {
-		highscoreStore = JSON.parse(localStorage.getItem("highscores"));
-
-		highscoreStore[initials.value] = result;
-
-		localStorage.setItem("highscores", JSON.stringify(highscoreStore));
-	}
-
-	// Update highscores list by resetting the previous list, sorting the scores,
-	// then appending the sorted scores to the highscore list as new list items
-	highscoreList.innerHTML = "";
-	const sortedInitals = sortScores(highscoreStore);
-
-	sortedInitals.forEach(initial => {
-		const listItem = document.createElement("li");
-		listItem.innerHTML = `${initial}: ${highscoreStore[initial]}`;
-		highscoreList.appendChild(listItem);
-	});
-
-	// Continue to the highscore section
-	resultSection.style.display = "none";
-	highscoreSection.style.display = "block";
+	renderHighscores();
 });
 
 returnButton.addEventListener("click", () => {
