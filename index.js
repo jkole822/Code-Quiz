@@ -1,8 +1,3 @@
-// After submitting their initials, the highscore section will be rendered
-// which will show all previous scores ranked in order with the corresponding
-// initials. The user will then have then option to clear the highscore list and
-// go back to the start of the quiz.
-
 // Question 1
 const questionOne =
 	"What principle of Object-Oriented Programming explains the following behavior?";
@@ -301,6 +296,9 @@ const correctMsg = document.getElementById("correct");
 const incorrectMsg = document.getElementById("incorrect");
 const highscoreList = document.getElementById("highscore-list");
 const highscoreLink = document.getElementById("highscore-link");
+const timer = document.getElementById("timer");
+const displayMinutes = document.getElementById("minutes");
+const displaySeconds = document.getElementById("seconds");
 
 const questionObject = {
 	0: {
@@ -355,15 +353,19 @@ const questionObject = {
 
 // currentQuestion is used to access the objects contained within
 // questionObject which and will be referred to below as the question index
-var currentQuestion = 0;
-var numCorrect = 0;
+var currentQuestion;
+var numCorrect;
 var result;
+var interval;
+var totalSeconds;
+var minutes;
 
 // Initialization function
 const init = () => {
 	questionSection.style.display = "none";
 	resultSection.style.display = "none";
 	highscoreSection.style.display = "none";
+	timer.style.display = "none";
 };
 
 // Renders a question depending on the question index
@@ -392,6 +394,9 @@ const handleResponse = event => {
 
 		correctMsg.style.display = "block";
 	} else {
+		// Deduct time if user answers incorrectly
+		deductTime();
+
 		incorrectMsg.style.display = "block";
 	}
 };
@@ -405,6 +410,17 @@ const calculateResult = () => {
 	score.textContent = `${result}%`;
 };
 
+// Renders the result section. Executed when user answers all questions
+// or time has run out
+const renderResult = () => {
+	questionSection.style.display = "none";
+	resultSection.style.display = "block";
+
+	calculateResult();
+	clearInterval(interval);
+	timer.style.display = "none";
+};
+
 // Sorts highscores from local storage
 const sortScores = highscores => {
 	return Object.keys(highscores).sort((a, b) => {
@@ -412,20 +428,98 @@ const sortScores = highscores => {
 	});
 };
 
-// Redirect directly to highscore section
+// Setup Timer
+const setupTimer = () => {
+	timer.style.display = "block";
+	minutes = 8;
+	totalSeconds = minutes * 60;
+
+	displayMinutes.textContent = minutes;
+	displaySeconds.textContent = "00";
+
+	countdownSeconds();
+};
+
+// Start Timer
+const countdownSeconds = () => {
+	interval = setInterval(() => {
+		totalSeconds--;
+		const seconds = totalSeconds % 60;
+
+		// When time runs out, stop the timer and render the result
+		if (minutes === 0 && seconds === 0) {
+			clearInterval(interval);
+			renderResult();
+		}
+
+		if (seconds === 59) {
+			countdownMinutes();
+		}
+
+		if (seconds < 10) {
+			displaySeconds.textContent = "0" + seconds.toString();
+		} else {
+			displaySeconds.textContent = seconds;
+		}
+	}, 50);
+};
+
+// Countdown minutes
+const countdownMinutes = () => {
+	minutes--;
+	displayMinutes.textContent = minutes;
+};
+
+// Deduct 20 seconds from the timer
+const deductTime = () => {
+	const seconds = totalSeconds % 60;
+
+	// If time deduction exceeds amount of time left,
+	// stop the timer and render the result
+	if (minutes === 0 && seconds < 20) {
+		clearInterval(interval);
+		renderResult();
+	}
+
+	// If there is less than 20 seconds for the seconds portion
+	// of the timer, subtract off a minute before rendering seconds
+	// to the timer
+	if (seconds < 20) {
+		countdownMinutes();
+	}
+
+	totalSeconds -= 20;
+
+	if (seconds < 10) {
+		displaySeconds.textContent = "0" + seconds.toString();
+	} else {
+		displaySeconds.textContent = seconds;
+	}
+};
+
+// Redirect directly to highscore section and clear the timer
 highscoreLink.addEventListener("click", () => {
 	startSection.style.display = "none";
 	questionSection.style.display = "none";
 	resultSection.style.display = "none";
 	highscoreSection.style.display = "block";
+
+	clearInterval(interval);
+	timer.style.display = "none";
 });
 
 // Starts the quiz
 startButton.addEventListener("click", () => {
+	// Reset question index and number of question correct
+	currentQuestion = 0;
+	numCorrect = 0;
+	initials.value = "";
+
 	startSection.style.display = "none";
 	questionSection.style.display = "block";
 
 	renderQuestion();
+	setupTimer();
 });
 
 optionButtons.addEventListener("click", event => {
@@ -437,16 +531,11 @@ optionButtons.addEventListener("click", event => {
 		// Display whether or not the user was correct in their answer
 		handleResponse(event);
 
-		// Wait one second and the user answered the last question,
-		// reset the question index and continue to results page
+		// Wait one second and if the user answered the last question,
+		// continue to results page
 		setTimeout(() => {
 			if (currentQuestion > 6) {
-				currentQuestion = 0;
-
-				questionSection.style.display = "none";
-				resultSection.style.display = "block";
-
-				calculateResult();
+				renderResult();
 
 				// Otherwise, increment the question index and continue to
 				// the next question
@@ -488,7 +577,7 @@ resultButton.addEventListener("click", event => {
 	// then appending the sorted scores to the highscore list as new list items
 	highscoreList.innerHTML = "";
 	const sortedInitals = sortScores(highscoreStore);
-	console.log(sortedInitals);
+
 	sortedInitals.forEach(initial => {
 		const listItem = document.createElement("li");
 		listItem.innerHTML = `${initial}: ${highscoreStore[initial]}`;
@@ -498,9 +587,6 @@ resultButton.addEventListener("click", event => {
 	// Continue to the highscore section
 	resultSection.style.display = "none";
 	highscoreSection.style.display = "block";
-
-	// Reset the number of questions answered correctly
-	numCorrect = 0;
 });
 
 returnButton.addEventListener("click", () => {
