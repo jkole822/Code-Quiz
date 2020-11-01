@@ -8,6 +8,80 @@
 	color: #ffffff;
 }
 
+/* Start Section */
+#start-section {
+	position: relative;
+}
+
+#start-heading {
+	text-align: center;
+	font-size: 2.3rem;
+	margin-bottom: 5vh;
+}
+
+#start-info {
+	text-align: justify;
+	margin-bottom: 5vh;
+}
+
+#start-button {
+	position: absolute;
+	left: 50%;
+	transform: translateX(-50%);
+}
+
+/* Question Section */
+#question {
+	font-size: 1.2rem;
+	margin-bottom: 5vh;
+}
+
+pre {
+	border-radius: 5px;
+	background-color: rgb(233, 233, 233);
+	padding: 3vh 3vw 3vh 3vw;
+	margin-bottom: 5vh;
+}
+
+/* Question Section: Reveal Correct Message */
+#reveal-correct {
+	text-align: center;
+	font-weight: 700;
+	font-size: 1.3rem;
+
+	margin-top: 2vh;
+}
+
+#correct {
+	color: rgb(14, 119, 0);
+}
+
+#incorrect {
+	color: rgb(128, 0, 0);
+}
+
+/* Result and Highscore Sections */
+.flexbox-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+#result-heading,
+#highscore-heading {
+	font-size: 2rem;
+	margin-bottom: 5vh;
+}
+
+#score {
+	font-size: 1.4rem;
+	font-weight: 200;
+}
+
+#highscore-list {
+	margin-bottom: 5vh;
+}
+
 /* Settings to Implement Sticky Footer (used with flex-shrink: 0 on #footer) */
 
 html,
@@ -46,9 +120,12 @@ body {
 	margin-bottom: 0;
 }
 
-/* Medium Screen Sizes and Up */
 @media only screen and (min-width: 768px) {
-	.btn {
-		width: 15%;
+	/* Buttons */
+	#multi-choice-buttons,
+	#highscore-buttons {
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
 	}
 }

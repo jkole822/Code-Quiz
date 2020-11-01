@@ -2,8 +2,7 @@
 const questionOne =
 	"What principle of Object-Oriented Programming explains the following behavior?";
 
-const codeOne = `
-let Cat = (() => {
+const codeOne = `let Cat = (() => {
     let privateProps = new WeakMaps();
     class Cat {
         constructor(name) {
@@ -45,8 +44,7 @@ const questionOneChoices = {
 const questionTwo =
 	"What principle of Object-Oriented Programming underlines why the following commands still work after changing the code from version A to version B?";
 
-const codeTwo = `
-// Commands
+const codeTwo = `// Commands
 const me = new Person("Kole", "Gasior");
 console.log(me.fullName);
 // Logs "Kole Gasior"
@@ -87,8 +85,7 @@ const questionTwoChoices = {
 const questionThree =
 	"What principle of Object-Oriented Programming explains the output below based on the code shown below?";
 
-const codeThree = `
-class Person {
+const codeThree = `class Person {
     constructor(name) {
         this.name = name;
         this.greeting = function() {
@@ -126,8 +123,7 @@ const questionThreeChoices = {
 const questionFour =
 	"What principle of Object-Oriented Programming is illustrated in the following code?";
 
-const codeFour = `
-class Shape {
+const codeFour = `class Shape {
     area() {
         return 0;
     }
@@ -182,8 +178,7 @@ const questionFourChoices = {
 
 const questionFive = "What is the following code an example of?";
 
-const codeFive = `
-// ...
+const codeFive = `// ...
 <div id="buttons">
   <button>Button One</button>
   <button>Button Two</button>
@@ -212,8 +207,7 @@ const questionFiveChoices = {
 const questionSix =
 	"What method would you call to prevent the alerts from being called from the div and form elements when the p element is clicked?";
 
-const codeSix = `
-// ...
+const codeSix = `// ...
 <form onclick="alert('form')">Form
     <div onclick="alert('div')">Div
     <p>Paragraph</p>
@@ -239,8 +233,7 @@ const questionSixChoices = {
 const questionSeven =
 	"What method would call below to prevent the form from being submitted?";
 
-const codeSeven = `
-// ...
+const codeSeven = `// ...
 <form>
     <label for='email'>Email</label>
     <input name='email' type='text' id='email' />
@@ -249,7 +242,7 @@ const codeSeven = `
     <button type='submit>Submit</button>
 </form>
 <script>
-    document.querySelector('form).addEventListener('click', e => {
+    document.querySelector('form').addEventListener('click', e => {
         // YOUR CODE HERE
         // ...
     })
@@ -265,8 +258,7 @@ const questionSevenChoices = {
 };
 
 // Question 8
-const questionEight = `
-Which of the following corresponds to the following definition: 
+const questionEight = `Which of the following corresponds to the following definition: 
 A programming paradigm based the concept of "objects", which can contain data and code:
 data in the form of fields (often known as attributes or properties), and code, in the
 form of procedures (often known as methods).
@@ -299,6 +291,8 @@ const highscoreLink = document.getElementById("highscore-link");
 const timer = document.getElementById("timer");
 const displayMinutes = document.getElementById("minutes");
 const displaySeconds = document.getElementById("seconds");
+const form = document.getElementById("form");
+const formGroup = document.querySelector(".form-group");
 
 const questionObject = {
 	0: {
@@ -378,6 +372,12 @@ const renderQuestion = () => {
 	question.textContent = questionObject[currentQuestion].question;
 	questionCode.innerText = questionObject[currentQuestion].code;
 
+	if (!questionObject[currentQuestion].code) {
+		questionCode.parentElement.style.display = "none";
+	} else {
+		questionCode.parentElement.style.display = "block";
+	}
+
 	multipleChoiceOptions.forEach(option => {
 		const button = document.getElementById(option);
 
@@ -441,7 +441,7 @@ const renderHighscores = () => {
 
 		// Otherwise, retrieve the local storage object and add the result with
 		// corresponding user initials
-	} else {
+	} else if (localStorage.getItem("highscores")) {
 		highscoreStore = JSON.parse(localStorage.getItem("highscores"));
 
 		if (initials.value) {
@@ -454,13 +454,16 @@ const renderHighscores = () => {
 	// Update highscores list by resetting the previous list, sorting the scores,
 	// then appending the sorted scores to the highscore list as new list items
 	highscoreList.innerHTML = "";
-	const sortedInitals = sortScores(highscoreStore);
 
-	sortedInitals.forEach(initial => {
-		const listItem = document.createElement("li");
-		listItem.innerHTML = `${initial}: ${highscoreStore[initial]}`;
-		highscoreList.appendChild(listItem);
-	});
+	if (highscoreStore) {
+		const sortedInitals = sortScores(highscoreStore);
+
+		sortedInitals.forEach(initial => {
+			const listItem = document.createElement("li");
+			listItem.innerHTML = `${initial}: ${highscoreStore[initial]}`;
+			highscoreList.appendChild(listItem);
+		});
+	}
 
 	// Continue to the highscore section
 	resultSection.style.display = "none";
@@ -509,25 +512,25 @@ const countdownMinutes = () => {
 	displayMinutes.textContent = minutes;
 };
 
-// Deduct 20 seconds from the timer
+// Deduct 30 seconds from the timer
 const deductTime = () => {
 	const seconds = totalSeconds % 60;
 
 	// If time deduction exceeds amount of time left,
 	// stop the timer and render the result
-	if (minutes === 0 && seconds < 20) {
+	if (minutes === 0 && seconds < 30) {
 		clearInterval(interval);
 		renderResult();
 	}
 
-	// If there is less than 20 seconds for the seconds portion
+	// If there is less than 30 seconds for the seconds portion
 	// of the timer, subtract off a minute before rendering seconds
 	// to the timer
-	if (seconds < 20) {
+	if (seconds < 30) {
 		countdownMinutes();
 	}
 
-	totalSeconds -= 20;
+	totalSeconds -= 30;
 
 	if (seconds < 10) {
 		displaySeconds.textContent = "0" + seconds.toString();
@@ -607,3 +610,35 @@ clearButton.addEventListener("click", () => {
 });
 
 init();
+
+// Responsive Buttons
+// Create a condition that targets viewports at least 768px wide
+const mediaQuery = window.matchMedia("(min-width: 768px)");
+
+function handleWindowChange(e) {
+	const buttons = [startButton, resultButton, returnButton, clearButton];
+
+	// If media query is true, make buttons smaller, and make form inline
+	if (e.matches) {
+		for (let i = 0; i < optionButtons.children.length; i++) {
+			optionButtons.children[i].classList.remove("btn-block");
+		}
+		buttons.forEach(button => button.classList.remove("btn-block"));
+		form.classList.add("form-inline");
+		formGroup.classList.add("mr-3");
+	} else {
+		// Otherwise, buttons should take up width of container and form elements should be block elements
+		for (let i = 0; i < optionButtons.children.length; i++) {
+			optionButtons.children[i].classList.add("btn-block");
+		}
+		buttons.forEach(button => button.classList.add("btn-block"));
+		form.classList.remove("form-inline");
+		formGroup.classList.remove("mr-3");
+	}
+}
+
+// Register event listener
+mediaQuery.addListener(handleWindowChange);
+
+// Initial check
+handleWindowChange(mediaQuery);
