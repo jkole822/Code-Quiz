@@ -350,18 +350,20 @@ const questionObject = {
 	},
 };
 
-const highscores = localStorage.setItem("highscore", {});
-
+// currentQuestion is used to access the objects contained within
+// questionObject which and will be referred to below as the question index
 var currentQuestion = 0;
 var numCorrect = 0;
 var result;
 
+// Initialization function
 const init = () => {
 	questionSection.style.display = "none";
 	resultSection.style.display = "none";
 	highscoreSection.style.display = "none";
 };
 
+// Renders a question depending on the question index
 const renderQuestion = () => {
 	const multipleChoiceOptions = ["a", "b", "c", "d"];
 
@@ -378,6 +380,9 @@ const renderQuestion = () => {
 	});
 };
 
+// Increments the number of questions the user has answered correctly and
+// conditionally renders to the page whether the user has answered
+// correctly or incorrectly on the current question
 const handleResponse = event => {
 	if (event.target.id === questionObject[currentQuestion].answer) {
 		numCorrect++;
@@ -388,6 +393,8 @@ const handleResponse = event => {
 	}
 };
 
+// Calculates the result after user finishes answering
+// all eight questions
 const calculateResult = () => {
 	result = (numCorrect / 8) * 100;
 	result = result.toFixed(1);
@@ -395,6 +402,7 @@ const calculateResult = () => {
 	score.textContent = `${result}%`;
 };
 
+// Starts the quiz
 startButton.addEventListener("click", () => {
 	startSection.style.display = "none";
 	questionSection.style.display = "block";
@@ -404,8 +412,11 @@ startButton.addEventListener("click", () => {
 
 optionButtons.addEventListener("click", event => {
 	if (event.target.matches("button")) {
+		// Display whether or not the user was correct in their answer
 		handleResponse(event);
 
+		// Wait one second and the user answered the last question,
+		// reset the question index and continue to results page
 		setTimeout(() => {
 			if (currentQuestion > 6) {
 				currentQuestion = 0;
@@ -414,6 +425,9 @@ optionButtons.addEventListener("click", event => {
 				resultSection.style.display = "block";
 
 				calculateResult();
+
+				// Otherwise, increment the question index and continue to
+				// the next question
 			} else {
 				currentQuestion++;
 
@@ -426,12 +440,16 @@ optionButtons.addEventListener("click", event => {
 resultButton.addEventListener("click", event => {
 	event.preventDefault();
 
+	// If there is no current local storage for results, create one
 	if (!localStorage.getItem("highscores")) {
 		const newHighscoreStore = {};
 
 		newHighscoreStore[initials.value] = result;
 
 		localStorage.setItem("highscores", JSON.stringify(newHighscoreStore));
+
+		// Otherwise, retrieve the local storage object and add the result with
+		// corresponding user initials
 	} else {
 		const highscoreStore = JSON.parse(localStorage.getItem("highscores"));
 
@@ -440,13 +458,16 @@ resultButton.addEventListener("click", event => {
 		localStorage.setItem("highscores", JSON.stringify(highscoreStore));
 	}
 
+	// Continue to the highscore section
 	resultSection.style.display = "none";
 	highscoreSection.style.display = "block";
 
+	// Reset the number of questions answered correctly
 	numCorrect = 0;
 });
 
 returnButton.addEventListener("click", () => {
+	// Return to the start of the quiz
 	highscoreSection.style.display = "none";
 	startSection.style.display = "block";
 });
