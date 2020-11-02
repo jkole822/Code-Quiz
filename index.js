@@ -3,7 +3,7 @@ const questionOne =
 	"What principle of Object-Oriented Programming explains the following behavior?";
 
 const codeOne = `let Cat = (() => {
-    let privateProps = new WeakMaps();
+    let privateProps = new WeakMap();
     class Cat {
         constructor(name) {
             this.name = name;
@@ -11,17 +11,17 @@ const codeOne = `let Cat = (() => {
             this.feed = function() {
                 privateProps.set(this, { hungry: false });
             }
-        }
-        this.isHungry = function() {
-            if (private.get(this).hungry) {
-                console.log("MEROWWW!");
-            } else {
-                console.log("Purrr...");
+            this.isHungry = function() {
+                if (privateProps.get(this).hungry) {
+                    console.log("MEROWWW!");
+                } else {
+                    console.log("Purrr...");
+                }
             }
         }
     }
     return Cat;
-}()
+})()
 
 const salem = new Cat("Salem");
 salem.hungry = false;
