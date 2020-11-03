@@ -514,7 +514,7 @@ const countdownMinutes = () => {
 
 // Deduct 30 seconds from the timer
 const deductTime = () => {
-	const seconds = totalSeconds % 60;
+	var seconds = totalSeconds % 60;
 
 	// If time deduction exceeds amount of time left,
 	// stop the timer and render the result
@@ -531,10 +531,12 @@ const deductTime = () => {
 	}
 
 	totalSeconds -= 30;
+	seconds = totalSeconds % 60;
 
 	if (seconds < 10) {
 		displaySeconds.textContent = "0" + seconds.toString();
 	} else {
+		console.log("fire");
 		displaySeconds.textContent = seconds;
 	}
 };
