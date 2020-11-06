@@ -1,3 +1,6 @@
+// QUESTIONS AND CHOICES
+// ===================================================================================
+
 // Question 1
 const questionOne =
 	"What principle of Object-Oriented Programming explains the following behavior?";
@@ -271,6 +274,9 @@ const questionEightChoices = {
 	d: "Object-Oriented Programming",
 };
 
+// VARIABLES
+// ===================================================================================
+
 const startSection = document.getElementById("start-section");
 const questionSection = document.getElementById("question-section");
 const resultSection = document.getElementById("result-section");
@@ -294,6 +300,9 @@ const displaySeconds = document.getElementById("seconds");
 const form = document.getElementById("form");
 const formGroup = document.querySelector(".form-group");
 
+// Object used to store question data
+// Referenced below to sequentially render questions
+// and multiple choice options
 const questionObject = {
 	0: {
 		question: questionOne,
@@ -346,7 +355,7 @@ const questionObject = {
 };
 
 // currentQuestion is used to access the objects contained within
-// questionObject which and will be referred to below as the question index
+// questionObject and will be referred to below as the question index
 var currentQuestion;
 var numCorrect;
 var result;
@@ -354,7 +363,11 @@ var interval;
 var totalSeconds;
 var minutes;
 
+// FUNCTIONS
+// ===================================================================================
+
 // Initialization function
+// NOTE: Called after event listeners
 const init = () => {
 	questionSection.style.display = "none";
 	resultSection.style.display = "none";
@@ -541,6 +554,9 @@ const deductTime = () => {
 	}
 };
 
+// EVENT LISTENERS
+// ===================================================================================
+
 // Redirect directly to highscore section and clear the timer
 highscoreLink.addEventListener("click", () => {
 	startSection.style.display = "none";
@@ -611,9 +627,16 @@ clearButton.addEventListener("click", () => {
 	highscoreList.innerHTML = "";
 });
 
+// INITIALIZE
+// ===================================================================================
+
 init();
 
-// Responsive Buttons
+// ===================================================================================
+
+// MAKE BUTTONS RESPONSIVE
+// ===================================================================================
+
 // Create a condition that targets viewports at least 768px wide
 const mediaQuery = window.matchMedia("(min-width: 768px)");
 
