@@ -23,3 +23,16 @@ Contains a short quiz testing the user on JavaScript fundamental, namely concept
 ### Highscore Screen
 
 ![Highscore Screen](/images/highscore-section.png)
+
+## Technologies
+- HTML
+- CSS
+- Bootstrap
+- JavaScript
+- Luxon
+
+## License
+MIT
+
+## Contact
+Email: jkole822@gmail.com
