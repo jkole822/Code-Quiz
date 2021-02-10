@@ -45,7 +45,7 @@ const questionOneChoices = {
 
 // Question 2
 const questionTwo =
-	"What principle of Object-Oriented Programming underlines why the following commands still work after changing the code from version A to version B?";
+	"Consider the differences between Version A and Version B, as well as the command output below. What principle of Object-Oriented Programming is illustrated here?";
 
 const codeTwo = `// Commands
 const me = new Person("Kole", "Gasior");
@@ -262,7 +262,7 @@ const questionSevenChoices = {
 
 // Question 8
 const questionEight = `Which of the following corresponds to the following definition: 
-A programming paradigm based the concept of "objects", which can contain data and code:
+A programming paradigm based on the concept of "objects", which can contain data and code:
 data in the form of fields (often known as attributes or properties), and code, in the
 form of procedures (often known as methods).
 `;
